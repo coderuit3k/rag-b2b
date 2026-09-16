@@ -105,6 +105,16 @@ def rename_conversation(conv_id: str, req: RenameConversationRequest):
     return {"conv_id": conv_id, "title": conv["title"]}
 
 
+@app.delete("/api/conversations/{conv_id}")
+def delete_conversation(conv_id: str, user_id: str):
+    conversations = chat_store.load_conversations(user_id)
+    if conv_id not in conversations:
+        raise HTTPException(404, "conversation không tồn tại")
+    del conversations[conv_id]
+    chat_store.save_conversations(user_id, conversations)
+    return {"conv_id": conv_id}
+
+
 class EmailConfirmRequest(BaseModel):
     user_id: str
     conv_id: str

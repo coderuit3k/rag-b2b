@@ -12,6 +12,7 @@ import {
   confirmCrmUpdate,
   confirmEmail,
   createConversation,
+  deleteConversation,
   fetchConversations,
   renameConversation,
   sendChat,
@@ -182,6 +183,30 @@ export default function ChatApp() {
     [user]
   );
 
+  const handleDelete = useCallback(
+    async (convId: string) => {
+      if (!user) return;
+      try {
+        await deleteConversation({ userId: user.id, convId });
+      } catch {
+        return; // lỗi mạng — không xoá khỏi state nếu backend chưa xoá thành công
+      }
+      setConversations((prev) => {
+        const next = { ...prev };
+        delete next[convId];
+        return next;
+      });
+      if (activeId !== convId) return;
+      const remaining = Object.keys(conversations).filter((id) => id !== convId);
+      if (remaining.length > 0) {
+        setActiveId(remaining[remaining.length - 1]);
+      } else {
+        startNewChat(user.id);
+      }
+    },
+    [user, activeId, conversations, startNewChat]
+  );
+
   async function handleEmailDecision(send: boolean) {
     if (!user || !activeId || !pendingEmail) return;
     setEmailPending(true);
@@ -238,6 +263,7 @@ export default function ChatApp() {
         onSelect={setActiveId}
         onNewChat={() => user && startNewChat(user.id)}
         onRename={handleRename}
+        onDelete={handleDelete}
       />
       <div className="flex flex-1 flex-col">
         <ChatHeader

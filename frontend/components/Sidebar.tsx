@@ -1,7 +1,7 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
-import { Pencil, Search, Sparkles, SquarePen } from "lucide-react";
+import { Pencil, Search, Sparkles, SquarePen, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { formatRelative } from "@/lib/format";
 import type { Conversations } from "@/lib/types";
@@ -20,12 +20,14 @@ export default function Sidebar({
   onSelect,
   onNewChat,
   onRename,
+  onDelete,
 }: {
   conversations: Conversations;
   activeId: string | null;
   onSelect: (id: string) => void;
   onNewChat: () => void;
   onRename: (id: string, title: string) => void;
+  onDelete: (id: string) => void;
 }) {
   const [query, setQuery] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -140,7 +142,7 @@ export default function Sidebar({
                       />
                     ) : (
                       <span
-                        className={`truncate pr-6 text-sm ${
+                        className={`truncate pr-12 text-sm ${
                           active ? "font-semibold text-brand-strong" : "font-medium text-ink"
                         }`}
                       >
@@ -153,17 +155,32 @@ export default function Sidebar({
                 </div>
               </div>
               {!editing && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    startEdit(id);
-                  }}
-                  aria-label="Đổi tên hội thoại"
-                  title="Đổi tên"
-                  className="absolute top-1/2 right-2 flex h-7 w-7 -translate-y-1/2 shrink-0 items-center justify-center rounded-full text-ink-soft opacity-0 transition-opacity hover:bg-line hover:text-ink group-hover:opacity-100 focus:opacity-100"
-                >
-                  <Pencil size={13} />
-                </button>
+                <div className="absolute top-1/2 right-2 flex -translate-y-1/2 shrink-0 items-center gap-0.5">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      startEdit(id);
+                    }}
+                    aria-label="Đổi tên hội thoại"
+                    title="Đổi tên"
+                    className="flex h-7 w-7 items-center justify-center rounded-full text-ink-soft opacity-0 transition-opacity hover:bg-line hover:text-ink group-hover:opacity-100 focus:opacity-100"
+                  >
+                    <Pencil size={13} />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm(`Xoá hội thoại "${conversations[id].title}"? Không thể hoàn tác.`)) {
+                        onDelete(id);
+                      }
+                    }}
+                    aria-label="Xoá hội thoại"
+                    title="Xoá"
+                    className="flex h-7 w-7 items-center justify-center rounded-full text-ink-soft opacity-0 transition-opacity hover:bg-red-100 hover:text-red-600 group-hover:opacity-100 focus:opacity-100"
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
               )}
             </div>
           );

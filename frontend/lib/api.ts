@@ -91,6 +91,13 @@ export function renameConversation(params: {
   });
 }
 
+export function deleteConversation(params: { userId: string; convId: string }): Promise<{ conv_id: string }> {
+  return api(
+    `/api/conversations/${encodeURIComponent(params.convId)}?user_id=${encodeURIComponent(params.userId)}`,
+    { method: "DELETE" }
+  );
+}
+
 export function confirmEmail(params: {
   userId: string;
   convId: string;
