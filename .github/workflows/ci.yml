@@ -1,0 +1,59 @@
+name: CI
+
+# Chỉ check KHÔNG cần secret (compile Python, build/lint frontend) — không chạy eval/smoke_features.py
+# hay eval/ragas_eval.py ở đây vì 2 script đó gọi LLM/DB THẬT (OpenAI, Anthropic, Neo4j, Qdrant,
+# Tavily, Composio, Cloudflare, Clerk...) -> cần ~30 secrets, tốn phí mỗi lần push, và dễ fail giả vì
+# dịch vụ ngoài chập chờn chứ không phải do code sai. Muốn chạy smoke suite trong CI thì thêm secrets
+# tương ứng vào Settings -> Secrets rồi bỏ comment job "smoke" bên dưới.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Compile-check (bắt lỗi syntax, không chạy code)
+        run: python -m compileall -q src
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+
+  # smoke:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v5
+  #       with: { python-version: "3.11" }
+  #     - run: pip install -r requirements.txt
+  #     - run: python eval/smoke_features.py
+  #       env:
+  #         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  #         ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  #         NEO4J_URI: ${{ secrets.NEO4J_URI }}
+  #         NEO4J_USERNAME: ${{ secrets.NEO4J_USERNAME }}
+  #         NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
+  #         QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
+  #         QDRANT_CLUSTER_ENDPOINT: ${{ secrets.QDRANT_CLUSTER_ENDPOINT }}
+  #         TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+  #         COMPOSIO_API_KEY: ${{ secrets.COMPOSIO_API_KEY }}
+  #         # ... còn lại xem .env

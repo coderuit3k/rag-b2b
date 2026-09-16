@@ -1,0 +1,37 @@
+# Top-level deps (không pin sâu). Xem docs/README.md bảng "Phụ thuộc mới".
+langchain-core
+langchain-openai
+langchain-anthropic
+langchain-ollama          # chỉ dùng khi LLM_BACKEND=ollama (router + diễn đạt local)
+langchain-neo4j
+langchain-qdrant
+langchain-classic         # SelfQueryRetriever + AttributeInfo (tools/vector.py) — langchain v1.x tách riêng
+langchain-community       # QdrantTranslator cho self-query (tools/vector.py) — deprecated nhưng chỉ nơi có translator này
+lark                      # parser cho self-query (langchain_classic đòi hỏi, không tự kéo theo)
+openai
+anthropic
+qdrant-client
+neo4j
+polars
+pandas
+pyarrow
+s3fs
+boto3
+python-dotenv
+streamlit
+fastapi                   # api.py — cầu nối HTTP cho frontend Next.js (frontend/)
+uvicorn                   # chạy api.py: uvicorn rag_b2b.api:app --reload --port 8000
+lightgbm
+scikit-learn
+numpy
+# Phase 3 (tuỳ chọn): ragas
+fastembed
+ragas
+requests
+ddgs                      # tìm ảnh sản phẩm free — CHỈ dùng ở scripts/batch_archive_images.py, không phải app chính
+composio
+# Xuất lịch sử hỏi-đáp (app.py): .xlsx / .pdf / .docx — .csv dùng pandas (đã có sẵn)
+openpyxl
+fpdf2
+python-docx
+psycopg[binary]           # chat_store.py — lịch sử chat lưu Neon Postgres (đổi từ JSON/đĩa 2026-09-15)

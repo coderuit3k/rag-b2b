@@ -1,0 +1,22 @@
+# secrets
+.env
+
+# python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# frontend
+frontend/node_modules/
+frontend/.next/
+frontend/tsconfig.tsbuildinfo
+
+# generated
+data/cache/
+data/chat_history/   # lịch sử chat theo user (app.py) — dữ liệu người dùng, không commit
+eval/results/
+!eval/results/history.csv   # ledger cross-run, giữ lại
+*.log
