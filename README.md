@@ -16,12 +16,19 @@ python -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/pip install -e . --no-deps      # để "import rag_b2b.*" chạy từ eval/, scripts/, test
 cp .env.example .env                        # rồi điền khoá (xem docs/README.md §Phụ thuộc mới)
+cd frontend && npm install && cd ..         # phụ thuộc frontend Next.js
 ```
 
 ## Chạy
 
 ```bash
-streamlit run src/rag_b2b/app.py                       # UI chat
+.venv/bin/uvicorn rag_b2b.api:app --reload --port 8000   # backend (cold start ~30-35s: Neo4j/Qdrant/embeddings)
+cd frontend && npm run dev                                # frontend Next.js, http://localhost:3000
+```
+
+Kiểm tra rời (không cần chạy cả app):
+
+```bash
 python -m rag_b2b.indexer verify                       # kiểm tra kết nối + số liệu store
 python -c "from rag_b2b.pipeline import agent_pipeline; \
           print(agent_pipeline.invoke({'question': 'Khách 10001 sẽ mua gì tiếp theo?'}))"
