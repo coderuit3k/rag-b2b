@@ -1,7 +1,11 @@
 # RAG(B2B)
 
+![CI](https://github.com/coderuit3k/rag-b2b/actions/workflows/ci.yml/badge.svg)
+
 GraphRAG cho bán lẻ mẹ & bé: router 5 nhánh trên Neo4j (graph) + Qdrant (vector hybrid) +
-LightGBM (dự đoán sản phẩm) + Tavily (web) + Composio/Cloudflare (email).
+LightGBM (dự đoán sản phẩm) + Tavily (web) + Composio/Cloudflare (email). Nhánh graph/vector/web
+có Corrective RAG (CRAG): chấm điểm ngữ cảnh truy hồi trước khi trả lời, không liên quan thì tự
+viết lại câu hỏi và tìm lại thay vì trả lời liều hoặc nói "không biết".
 
 **Tiến độ & thiết kế chi tiết: [`docs/README.md`](docs/README.md)** (nguồn chính thức) và `docs/phase-1..4`.
 
@@ -32,3 +36,4 @@ python -c "from rag_b2b.pipeline import agent_pipeline; \
 | `eval/` | harness đánh giá; `eval/results/` = artefact sinh ra |
 | `data/` | `test/` ground-truth · `cache/` model tải từ S3 |
 | `docs/` | kế hoạch + tiến độ theo phase |
+| `.github/workflows/` | CI (`ci.yml`): compile-check backend + lint/build frontend trên mỗi push/PR, không cần secret |
