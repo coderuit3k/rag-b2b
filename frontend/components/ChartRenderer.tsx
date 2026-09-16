@@ -21,7 +21,7 @@ import type { ChartRow } from "@/lib/types";
 const KINDS = ["Cột", "Tròn", "Đường"] as const;
 type Kind = (typeof KINDS)[number];
 
-const COLORS = ["#2563eb", "#0ea5e9", "#22c55e", "#f59e0b", "#ef4444", "#a855f7", "#14b8a6"];
+const COLORS = ["#2e6ff2", "#0ea5e9", "#22c55e", "#f0930b", "#ef4444", "#a855f7", "#14b8a6"];
 
 /** Cột đầu tiên KHÔNG phải số làm nhãn, cột số đầu tiên làm giá trị — khớp logic
  * tools/graph.py::_chartable() (mỗi dòng >=2 cột, có ít nhất 1 cột số). */
@@ -46,7 +46,7 @@ export default function ChartRenderer({ data }: { data: ChartRow[] | null | unde
             key={k}
             onClick={() => setKind(k)}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-              kind === k ? "bg-blue-600 text-white" : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+              kind === k ? "bg-brand text-white" : "bg-surface text-ink-soft hover:bg-line"
             }`}
           >
             {k}
@@ -57,19 +57,19 @@ export default function ChartRenderer({ data }: { data: ChartRow[] | null | unde
         <ResponsiveContainer width="100%" height="100%">
           {kind === "Cột" ? (
             <BarChart data={data} margin={{ left: 0, right: 12, top: 4, bottom: 4 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e6e8ec" />
               <XAxis dataKey={labelKey} tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={50} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip />
-              <Bar dataKey={valueKey} fill="#2563eb" radius={[4, 4, 0, 0]} />
+              <Bar dataKey={valueKey} fill="#2e6ff2" radius={[4, 4, 0, 0]} />
             </BarChart>
           ) : kind === "Đường" ? (
             <LineChart data={data} margin={{ left: 0, right: 12, top: 4, bottom: 4 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e6e8ec" />
               <XAxis dataKey={labelKey} tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={50} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip />
-              <Line type="monotone" dataKey={valueKey} stroke="#2563eb" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey={valueKey} stroke="#2e6ff2" strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           ) : (
             <PieChart>

@@ -2,21 +2,16 @@
 
 import { SendHorizontal } from "lucide-react";
 import { useRef, useState } from "react";
-import { FORCE_ROUTES, type ForceRoute } from "@/lib/types";
 import VoiceButton from "./VoiceButton";
 
 export default function ChatInput({
   onSend,
   onSendVoice,
   disabled,
-  forceRoute,
-  onForceRouteChange,
 }: {
   onSend: (question: string) => void;
   onSendVoice: (audioBlob: Blob) => void;
   disabled: boolean;
-  forceRoute: ForceRoute;
-  onForceRouteChange: (route: ForceRoute) => void;
 }) {
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -35,49 +30,38 @@ export default function ChatInput({
   }
 
   return (
-    <div className="border-t border-zinc-200 bg-white p-3">
-      <div className="mx-auto flex max-w-3xl flex-col gap-2">
-        <select
-          value={forceRoute}
-          onChange={(e) => onForceRouteChange(e.target.value as ForceRoute)}
-          className="w-fit rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-xs text-zinc-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          title="Ép luồng xử lý thay vì để Auto-Router tự chọn"
-        >
-          {FORCE_ROUTES.map((r) => (
-            <option key={r.value} value={r.value}>
-              {r.label}
-            </option>
-          ))}
-        </select>
-        <div className="flex items-end gap-2">
-          <VoiceButton onRecorded={onSendVoice} disabled={disabled} />
-          <textarea
-            ref={textareaRef}
-            value={text}
-            onChange={(e) => {
-              setText(e.target.value);
-              autoResize(e.target);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                submit();
-              }
-            }}
-            rows={1}
-            placeholder="Nhập câu hỏi... (Shift+Enter xuống dòng)"
-            disabled={disabled}
-            className="max-h-[200px] flex-1 resize-none rounded-xl border border-zinc-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-zinc-50 disabled:text-zinc-400"
-          />
+    <div className="border-t border-line bg-panel p-3">
+      <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-3xl bg-surface px-2 py-2 ring-1 ring-line focus-within:ring-2 focus-within:ring-brand">
+        <textarea
+          ref={textareaRef}
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+            autoResize(e.target);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              submit();
+            }
+          }}
+          rows={1}
+          placeholder="Nhập tin nhắn... (Shift+Enter xuống dòng)"
+          disabled={disabled}
+          className="max-h-[200px] flex-1 resize-none bg-transparent px-2.5 py-2 text-sm text-ink placeholder:text-ink-soft focus:outline-none disabled:text-ink-soft"
+        />
+        {text.trim() ? (
           <button
             onClick={submit}
-            disabled={disabled || !text.trim()}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white transition-colors hover:bg-blue-700 disabled:bg-zinc-300"
+            disabled={disabled}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-white transition-colors hover:bg-brand-strong disabled:bg-ink-soft"
             aria-label="Gửi"
           >
             <SendHorizontal size={18} />
           </button>
-        </div>
+        ) : (
+          <VoiceButton onRecorded={onSendVoice} disabled={disabled} />
+        )}
       </div>
     </div>
   );

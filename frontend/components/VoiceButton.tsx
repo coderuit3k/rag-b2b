@@ -48,10 +48,10 @@ export default function VoiceButton({
       disabled={disabled}
       aria-label={recording ? "Dừng ghi âm" : "Ghi âm câu hỏi bằng giọng nói"}
       title={recording ? "Dừng ghi âm" : "Ghi âm câu hỏi bằng giọng nói"}
-      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors disabled:bg-zinc-200 disabled:text-zinc-400 ${
+      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors disabled:bg-line disabled:text-ink-soft ${
         recording
           ? "animate-pulse bg-red-600 text-white"
-          : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+          : "text-ink-soft hover:bg-line hover:text-ink"
       }`}
     >
       {recording ? <Square size={16} /> : <Mic size={18} />}

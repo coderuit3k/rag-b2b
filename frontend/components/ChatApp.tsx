@@ -2,6 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { useCallback, useEffect, useState } from "react";
+import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import ChatWindow from "./ChatWindow";
 import CrmConfirmCard from "./CrmConfirmCard";
@@ -210,7 +211,7 @@ export default function ChatApp() {
   }
 
   if (!isLoaded) {
-    return <div className="flex h-dvh items-center justify-center text-sm text-zinc-400">Đang tải...</div>;
+    return <div className="flex h-dvh items-center justify-center bg-surface text-sm text-ink-soft">Đang tải...</div>;
   }
 
   const activeConversation = activeId ? conversations[activeId] : undefined;
@@ -224,6 +225,11 @@ export default function ChatApp() {
         onNewChat={() => user && startNewChat(user.id)}
       />
       <div className="flex flex-1 flex-col">
+        <ChatHeader
+          conversationTitle={activeConversation?.title}
+          forceRoute={forceRoute}
+          onForceRouteChange={setForceRoute}
+        />
         <ChatWindow
           messages={activeConversation?.messages ?? []}
           loading={loading}
@@ -253,8 +259,6 @@ export default function ChatApp() {
           onSend={handleSend}
           onSendVoice={handleSendVoice}
           disabled={loading || !activeId || !!pendingEmail || !!pendingCrm}
-          forceRoute={forceRoute}
-          onForceRouteChange={setForceRoute}
         />
       </div>
     </div>

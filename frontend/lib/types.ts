@@ -4,6 +4,7 @@ export type Message = {
   role: "user" | "assistant";
   content: string;
   chart?: ChartRow[] | null;
+  ts?: number; // epoch giây, từ backend (api.py) — tin nhắn cũ trước 2026-09-16 không có, hiển thị rỗng
 };
 
 export type Conversation = {

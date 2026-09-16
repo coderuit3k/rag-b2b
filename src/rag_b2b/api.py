@@ -81,7 +81,7 @@ def list_conversations(user_id: str):
 def create_conversation(user_id: str):
     conversations = chat_store.load_conversations(user_id)
     conv_id = chat_store.new_conversation_id()
-    conversations[conv_id] = {"title": "Hội thoại mới", "messages": [dict(_GREETING)]}
+    conversations[conv_id] = {"title": "Hội thoại mới", "messages": [{**_GREETING, "ts": time.time()}]}
     chat_store.save_conversations(user_id, conversations)
     return {"conv_id": conv_id, "conversation": conversations[conv_id]}
 
@@ -110,7 +110,7 @@ def _process_chat_turn(user_id: str, conv_id: str, question: str, force_topic: s
 
     if len(conv["messages"]) == 1:
         conv["title"] = question[:40]
-    conv["messages"].append({"role": "user", "content": question})
+    conv["messages"].append({"role": "user", "content": question, "ts": time.time()})
     sid = f"{user_id}:{conv_id}"
 
     # Ý định "cập nhật trạng thái khách X trên CRM" (tools/crm.py, HubSpot qua Composio) — kiểm TRƯỚC
@@ -127,7 +127,7 @@ def _process_chat_turn(user_id: str, conv_id: str, question: str, force_topic: s
         if preview is None:
             answer = (f"⚠️ Không tìm thấy contact HubSpot nào ứng với khách hàng {customer_id} "
                       f"(có thể chưa đồng bộ sang CRM). Không có gì để cập nhật.")
-            conv["messages"].append({"role": "assistant", "content": answer})
+            conv["messages"].append({"role": "assistant", "content": answer, "ts": time.time()})
             chat_store.save_conversations(user_id, conversations)
             record_trace(user_id, conv_id, question, "crm_contact_not_found", time.time() - t0,
                          channel, role, force_topic)
@@ -147,7 +147,7 @@ def _process_chat_turn(user_id: str, conv_id: str, question: str, force_topic: s
     # (regex nhận diện đủ rõ ràng, xem _WATCH_INTENT_RE). Trả lời xác nhận, không chạy chat_stream().
     watch_confirm = try_register_watch(question, user_id, conv_id)
     if watch_confirm is not None:
-        conv["messages"].append({"role": "assistant", "content": watch_confirm})
+        conv["messages"].append({"role": "assistant", "content": watch_confirm, "ts": time.time()})
         chat_store.save_conversations(user_id, conversations)
         record_trace(user_id, conv_id, question, "watch_register", time.time() - t0,
                      channel, role, force_topic)
@@ -179,7 +179,7 @@ def _process_chat_turn(user_id: str, conv_id: str, question: str, force_topic: s
 
     chart = pop_chart_data(sid)
     topic = pop_last_topic(sid) or "unknown"
-    conv["messages"].append({"role": "assistant", "content": answer, "chart": chart})
+    conv["messages"].append({"role": "assistant", "content": answer, "chart": chart, "ts": time.time()})
     chat_store.save_conversations(user_id, conversations)
     record_trace(user_id, conv_id, question, topic, time.time() - t0, channel, role, force_topic,
                  error=error)
@@ -240,7 +240,7 @@ def confirm_email(req: EmailConfirmRequest):
         result = email_confirm_send(req.question, req.answer)
     else:
         result = "Đã huỷ, không gửi email."
-    conv["messages"].append({"role": "assistant", "content": result})
+    conv["messages"].append({"role": "assistant", "content": result, "ts": time.time()})
     chat_store.save_conversations(req.user_id, conversations)
     record_trace(req.user_id, req.conv_id, req.question,
                  "email_confirm_send" if req.send else "email_confirm_cancel", time.time() - t0)
@@ -268,7 +268,7 @@ def confirm_crm_update(req: CrmConfirmRequest):
         result = crm_update_confirm(req.customer_id, req.status)
     else:
         result = "Đã huỷ, không cập nhật CRM."
-    conv["messages"].append({"role": "assistant", "content": result})
+    conv["messages"].append({"role": "assistant", "content": result, "ts": time.time()})
     chat_store.save_conversations(req.user_id, conversations)
     record_trace(req.user_id, req.conv_id, f"customer={req.customer_id} status={req.status}",
                  "crm_confirm_send" if req.send else "crm_confirm_cancel", time.time() - t0)

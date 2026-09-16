@@ -15,13 +15,13 @@ export default function EmailConfirmCard({
   pending: boolean;
 }) {
   return (
-    <div className="flex flex-row gap-2">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700">
+    <div className="message-rise-in flex flex-row gap-2">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-tint text-amber">
         <Mail size={16} />
       </div>
-      <div className="max-w-[75%] rounded-2xl rounded-tl-sm border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
-        <p className="mb-2 font-medium text-amber-900">
-          📧 Sẽ gửi tới <span className="font-semibold">{recipient}</span>:
+      <div className="max-w-[75%] rounded-2xl rounded-tl-sm border border-[#f0930b4d] bg-amber-tint px-4 py-3 text-sm">
+        <p className="mb-2 font-medium text-ink">
+          Sẽ gửi tới <span className="font-semibold">{recipient}</span>:
         </p>
         <div className="prose prose-sm max-w-none prose-p:my-1">
           <ReactMarkdown>{preview}</ReactMarkdown>
@@ -30,16 +30,16 @@ export default function EmailConfirmCard({
           <button
             onClick={onConfirm}
             disabled={pending}
-            className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            className="rounded-lg bg-brand px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-strong disabled:opacity-50"
           >
-            ✅ Xác nhận gửi
+            Xác nhận gửi
           </button>
           <button
             onClick={onCancel}
             disabled={pending}
-            className="rounded-lg bg-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-300 disabled:opacity-50"
+            className="rounded-lg bg-panel px-3 py-1.5 text-xs font-medium text-ink-soft ring-1 ring-line hover:text-ink disabled:opacity-50"
           >
-            ❌ Huỷ
+            Huỷ
           </button>
         </div>
       </div>
