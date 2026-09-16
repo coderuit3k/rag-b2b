@@ -1,0 +1,73 @@
+# Render Blueprint (https://render.com/docs/blueprint-spec) — deploy backend FastAPI để frontend
+# Vercel gọi được (Vercel không thấy localhost trên máy bạn). Các key đánh dấu `sync: false` bạn tự
+# điền giá trị thật trong Render Dashboard sau khi tạo service từ blueprint này (copy từ .env) —
+# Claude không tự điền secret thay bạn được.
+services:
+  - type: web
+    name: rag-b2b-api
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirements.txt && pip install -e . --no-deps
+    startCommand: uvicorn rag_b2b.api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: ALLOWED_ORIGINS
+        sync: false # domain Vercel sau khi deploy, vd https://rag-b2b.vercel.app
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL_NAME
+        value: gpt-4o-mini
+      - key: EMBEDDING_MODEL_NAME
+        value: text-embedding-3-small
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_MODEL_NAME
+        value: claude-haiku-4-5
+      - key: LLM_BACKEND
+        value: cloud
+      - key: NEO4J_URI
+        sync: false
+      - key: NEO4J_USERNAME
+        sync: false
+      - key: NEO4J_PASSWORD
+        sync: false
+      - key: QDRANT_CLUSTER_ENDPOINT
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: DAILY_DATABASE_URL
+        sync: false
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+      - key: LANGCHAIN_API_KEY
+        sync: false
+      - key: LANGCHAIN_PROJECT
+        value: rag-b2b
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_REGION
+        value: ap-southeast-2
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: COMPOSIO_API_KEY
+        sync: false
+      - key: COMPOSIO_USER_ID
+        value: rag-b2b
+      - key: RESULT_EMAIL_TO
+        sync: false
+      - key: CLOUDFLARE_API_TOKEN
+        sync: false
+      - key: CLOUDFLARE_ACCOUNT_ID
+        sync: false
+      - key: CLOUDFLARE_KV_NAMESPACE_ID
+        sync: false

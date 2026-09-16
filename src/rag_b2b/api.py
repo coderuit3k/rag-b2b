@@ -17,6 +17,7 @@ skeleton trong lúc chờ (xem ChatInput.tsx).
 """
 import base64
 import logging
+import os
 import time
 from typing import Literal
 
@@ -37,10 +38,13 @@ _log = logging.getLogger(__name__)
 
 app = FastAPI(title="RAG(B2B) API")
 
-# CORS: Next.js dev server chạy origin khác (localhost:3000) với API này (localhost:8000).
+# CORS: Next.js chạy origin khác (localhost:3000 lúc dev, domain Vercel lúc deploy) với API này —
+# ALLOWED_ORIGINS (phân cách bởi dấu phẩy) cho phép thêm domain Vercel mà không phải sửa code, mặc
+# định vẫn localhost:3000 cho dev không cần set gì thêm.
+_allowed_origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=_allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
