@@ -80,6 +80,17 @@ export async function sendVoiceChat(params: {
   return res.json();
 }
 
+export function renameConversation(params: {
+  userId: string;
+  convId: string;
+  title: string;
+}): Promise<{ conv_id: string; title: string }> {
+  return api(`/api/conversations/${encodeURIComponent(params.convId)}/rename`, {
+    method: "POST",
+    body: JSON.stringify({ user_id: params.userId, title: params.title }),
+  });
+}
+
 export function confirmEmail(params: {
   userId: string;
   convId: string;

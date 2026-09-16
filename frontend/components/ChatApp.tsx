@@ -13,6 +13,7 @@ import {
   confirmEmail,
   createConversation,
   fetchConversations,
+  renameConversation,
   sendChat,
   sendVoiceChat,
 } from "@/lib/api";
@@ -168,6 +169,19 @@ export default function ChatApp() {
     }
   }
 
+  const handleRename = useCallback(
+    async (convId: string, title: string) => {
+      if (!user) return;
+      try {
+        const { title: saved } = await renameConversation({ userId: user.id, convId, title });
+        setConversations((prev) => ({ ...prev, [convId]: { ...prev[convId], title: saved } }));
+      } catch {
+        // lỗi mạng — bỏ qua, tiêu đề cũ vẫn hiển thị nguyên (app này không có hệ thống toast)
+      }
+    },
+    [user]
+  );
+
   async function handleEmailDecision(send: boolean) {
     if (!user || !activeId || !pendingEmail) return;
     setEmailPending(true);
@@ -223,6 +237,7 @@ export default function ChatApp() {
         activeId={activeId}
         onSelect={setActiveId}
         onNewChat={() => user && startNewChat(user.id)}
+        onRename={handleRename}
       />
       <div className="flex flex-1 flex-col">
         <ChatHeader

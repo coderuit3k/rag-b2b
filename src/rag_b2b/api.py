@@ -86,6 +86,25 @@ def create_conversation(user_id: str):
     return {"conv_id": conv_id, "conversation": conversations[conv_id]}
 
 
+class RenameConversationRequest(BaseModel):
+    user_id: str
+    title: str
+
+
+@app.post("/api/conversations/{conv_id}/rename")
+def rename_conversation(conv_id: str, req: RenameConversationRequest):
+    conversations = chat_store.load_conversations(req.user_id)
+    conv = conversations.get(conv_id)
+    if conv is None:
+        raise HTTPException(404, "conversation không tồn tại")
+    title = req.title.strip()
+    if not title:
+        raise HTTPException(400, "Tên hội thoại không được để trống")
+    conv["title"] = title[:60]
+    chat_store.save_conversations(req.user_id, conversations)
+    return {"conv_id": conv_id, "title": conv["title"]}
+
+
 class EmailConfirmRequest(BaseModel):
     user_id: str
     conv_id: str
