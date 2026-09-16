@@ -42,7 +42,9 @@ _CF_KV_URL = "https://api.cloudflare.com/client/v4/accounts/{acc}/storage/kv/nam
 
 # Composio yêu cầu ghim version toolkit khi execute thủ công (không nhận "latest").
 _GMAIL_VERSION = os.getenv("COMPOSIO_GMAIL_VERSION", "20260903_00")
+_log.info("[startup] mailer.py: khởi tạo Composio client (gmail)...")
 _composio = Composio(toolkit_versions={"gmail": _GMAIL_VERSION})
+_log.info("[startup] mailer.py: import xong")
 
 
 def recipient() -> str:

@@ -21,6 +21,7 @@ from rag_b2b.config import neo4j_driver, NEO4J_DATABASE, llm_main, llm_router
 from rag_b2b.tools.predict import _BOOSTER, FEATURES
 
 _log = logging.getLogger(__name__)
+_log.info("[startup] leads.py: import xong")
 
 _q = lambda cy, **kw: neo4j_driver.execute_query(
     cy, database_=NEO4J_DATABASE, routing_=RoutingControl.READ, **kw).records

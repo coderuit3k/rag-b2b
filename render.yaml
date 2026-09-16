@@ -13,6 +13,8 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.11"
+      - key: PYTHONUNBUFFERED
+        value: "1" # log flush ngay lập tức — không mất log chẩn đoán nếu tiến trình bị kill giữa chừng (OOM)
       - key: ALLOWED_ORIGINS
         sync: false # domain Vercel sau khi deploy, vd https://rag-b2b.vercel.app
       - key: OPENAI_API_KEY

@@ -48,6 +48,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+_log.info("[startup] api.py: import xong, app đã sẵn sàng — uvicorn sắp bind port")
 
 _GREETING = {"role": "assistant",
              "content": "Xin chào! Tôi có thể giúp gì cho bạn với dữ liệu khách hàng B2B hôm nay?"}

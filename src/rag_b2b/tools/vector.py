@@ -41,6 +41,7 @@ from rag_b2b.config import (llm_main, get_hybrid_store, retry_call, is_faithful,
 from rag_b2b.tools.web import run_web_search, run_web_search_stream
 
 _log = logging.getLogger(__name__)
+_log.info("[startup] vector.py: import xong (không có eager network call)")
 
 _K_FETCH = 12   # số hồ sơ lấy về từ Qdrant
 _K_FINAL = 5    # số hồ sơ đưa vào llm_main sau rerank

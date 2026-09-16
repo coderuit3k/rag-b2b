@@ -123,11 +123,13 @@ cypher_prompt = PromptTemplate(input_variables=["schema", "question"], template=
 # bột" model viết hoa/viết khác dữ liệu gốc) — xem cycle bên dưới cho ca này.
 # return_intermediate_steps=True: lộ ra Cypher đã sinh + context (list dòng kết quả thô) để
 # run_graph_search() biết được là rỗng hay lỗi mà quyết định có thử lại hay không.
+_log.info("[startup] graph.py: bắt đầu import")
 neo4j_chain = GraphCypherQAChain.from_llm(
     cypher_llm=cypher_llm, qa_llm=llm_main, graph=graph_db,
     cypher_prompt=cypher_prompt, allow_dangerous_requests=True, validate_cypher=True,
     return_intermediate_steps=True,
 )
+_log.info("[startup] graph.py: import xong")
 
 # Human-in-the-loop: chặn Cypher có khả năng GHI/XOÁ dữ liệu — KHÔNG tự chạy, không có nút "xác
 # nhận" tự phục vụ như nhánh email (mutation trên graph production rủi ro cao hơn gửi 1 email, nên

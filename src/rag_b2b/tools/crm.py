@@ -35,7 +35,9 @@ _log = logging.getLogger(__name__)
 
 _USER = os.getenv("COMPOSIO_USER_ID", "rag-b2b")
 _HUBSPOT_VERSION = os.getenv("COMPOSIO_HUBSPOT_VERSION", "20260915_00")
+_log.info("[startup] crm.py: khởi tạo Composio client (hubspot)...")
 _composio = Composio(toolkit_versions={"hubspot": _HUBSPOT_VERSION})
+_log.info("[startup] crm.py: import xong")
 
 _PROPERTY_NAME = "churn_risk_status"  # đổi qua .env nếu tài khoản HubSpot dùng tên property khác
 

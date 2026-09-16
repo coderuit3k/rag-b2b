@@ -10,6 +10,8 @@ logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO"),
     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
 )
+_startup_log = logging.getLogger("startup")
+_startup_log.info("[startup] config.py: bắt đầu import")
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_anthropic import ChatAnthropic
 from langchain_neo4j import Neo4jGraph
@@ -205,6 +207,7 @@ def rewrite_query(question: str) -> str:
 # Ưu tiên NEO4J_DATABASE trong .env, fallback về username (đúng với Aura instance hiện tại).
 NEO4J_DATABASE = os.getenv("NEO4J_DATABASE") or os.getenv("NEO4J_USERNAME")
 
+_startup_log.info("[startup] config.py: kết nối Neo4j AuraDB...")
 # -> Dùng cho LangChain (GraphCypherQAChain)
 graph_db = Neo4jGraph(
     url=os.getenv("NEO4J_URI"),
@@ -218,6 +221,7 @@ neo4j_driver = GraphDatabase.driver(
     os.getenv("NEO4J_URI"),
     auth=(os.getenv("NEO4J_USERNAME"), os.getenv("NEO4J_PASSWORD"))
 )
+_startup_log.info("[startup] config.py: Neo4j OK, kết nối Qdrant Cloud...")
 
 # 3. Kết nối Qdrant Cloud
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
@@ -242,6 +246,7 @@ vector_db = QdrantVectorStore(
     collection_name=QDRANT_COLLECTION,
     embedding=embeddings
 )
+_startup_log.info("[startup] config.py: Qdrant OK, import xong")
 
 
 def ensure_int8_quantization(name):

@@ -21,8 +21,10 @@ _log = logging.getLogger(__name__)
 
 _OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 _VISION_MODEL = os.getenv("OLLAMA_VISION_MODEL", "qwen2.5vl:3b")
+_log.info("[startup] vision.py: khởi tạo ChatOllama client (base_url=%s)...", _OLLAMA_URL)
 _vision_llm = ChatOllama(model=_VISION_MODEL, base_url=_OLLAMA_URL, temperature=0,
                          keep_alive="30m").with_retry(stop_after_attempt=3, wait_exponential_jitter=True)
+_log.info("[startup] vision.py: import xong")
 
 _PROMPT = (
     "Đây là ảnh 1 sản phẩm bán lẻ ngành hàng mẹ & bé. Cho biết tên sản phẩm, thương hiệu, "

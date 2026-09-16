@@ -6,6 +6,7 @@ Cần OPENAI_API_KEY (đã dùng chung mọi nơi khác trong dự án) + ELEVEN
 Gọi REST trực tiếp bằng requests (giống tools/mailer.py gọi Cloudflare KV) thay vì cài SDK
 `elevenlabs` riêng — chỉ 1 endpoint, không cần thêm phụ thuộc cho việc này.
 """
+import logging
 import os
 import re
 
@@ -15,6 +16,8 @@ from openai import OpenAI
 
 load_dotenv()
 
+_log = logging.getLogger(__name__)
+_log.info("[startup] voice.py: import xong")
 _openai_client = OpenAI()
 
 _ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")

@@ -11,6 +11,7 @@ Nhóm 3 (2026-09-10) đã THỬ brand_loyalty + repurchase_ratio → 0 cải thi
 (HitRate@10 0.598→0.600), đã revert. Xem docs/phase-2 §nhóm 3.
 """
 import json
+import logging
 import math
 import os
 import re
@@ -32,18 +33,27 @@ _S3_PREFIX = "models/ranker_sample"
 ITEMS_CAP = 50  # khớp ITEMS_PER_CUST khi train
 
 
+_log = logging.getLogger(__name__)
+
+
 def _ensure_model():
     if os.path.exists(_MODEL_PATH) and os.path.exists(_FEAT_PATH):
+        _log.info("[startup] predict.py: model đã có sẵn trong cache, bỏ qua tải S3")
         return
     import boto3
+    _log.info("[startup] predict.py: tải model.txt từ S3...")
     s3 = boto3.client("s3", region_name="ap-southeast-2")
     s3.download_file(_S3_BUCKET, f"{_S3_PREFIX}/model.txt", _MODEL_PATH)
+    _log.info("[startup] predict.py: tải features.json từ S3...")
     s3.download_file(_S3_BUCKET, f"{_S3_PREFIX}/features.json", _FEAT_PATH)
+    _log.info("[startup] predict.py: tải S3 xong")
 
 
+_log.info("[startup] predict.py: bắt đầu import")
 _ensure_model()
 _BOOSTER = lgb.Booster(model_file=_MODEL_PATH)
 FEATURES = json.load(open(_FEAT_PATH))
+_log.info("[startup] predict.py: import xong (LightGBM booster đã load)")
 
 _q = lambda cy, **kw: neo4j_driver.execute_query(
     cy, database_=NEO4J_DATABASE, routing_=RoutingControl.READ, **kw).records

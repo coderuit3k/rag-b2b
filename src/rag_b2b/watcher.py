@@ -23,6 +23,7 @@ from rag_b2b.config import graph_db
 from rag_b2b.tools.predict import run_prediction_search
 
 _log = logging.getLogger(__name__)
+_log.info("[startup] watcher.py: import xong")
 
 _TABLE_READY = False
 
